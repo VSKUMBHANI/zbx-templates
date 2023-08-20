@@ -1,0 +1,534 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    - uuid: 0835b2a34e4a43d6887f5887b0135acc
+      name: 'Templates/Servers Hardware'
+  templates:
+    - uuid: 6c2534a531744910938a4d2b573600b7
+      template: 'Lenovo XCC SNMPv3'
+      name: 'Lenovo XCC SNMPv3'
+      description: 'Template is used for XCC.'
+      templates:
+        - name: 'Linux by SNMP'
+      groups:
+        - name: 'Templates/Servers Hardware'
+      items:
+        - uuid: 5c2a7e15268e4326b3241c33581b0122
+          name: 'BMC (Active) Current Version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.1.1.3.1
+          key: bmcactive
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        - uuid: 0f549f9fab8b43ea8c4e5da79ce851ee
+          name: 'BMC (Backup) Current Version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.1.1.3.3
+          key: bmcbackup
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        - uuid: ad44faed378a4fc188028e7ccc838836
+          name: 'CPU1 Total Core'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.7.1
+          key: cpu1.core
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        - uuid: 4db84a8615a443ae9ffffe842333d732
+          name: 'CPU1 Model'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.12.1
+          key: cpu1.model
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        - uuid: 7ce7e41eb6184a8798fca6afffb376c1
+          name: 'CPU1 Part ID'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.4.1
+          key: cpu1.partid
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        - uuid: c815f28da3aa4864b6b6c69c9086c273
+          name: 'CPU2 Total Core'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.7.2
+          key: cpu2.core
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        - uuid: e728189babba4bab86bf11e801af1c6d
+          name: 'CPU2 Model'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.12.2
+          key: cpu2.model
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        - uuid: cc0cc661ddb44e8f97dea568e7db2112
+          name: 'CPU2 Part ID'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.4.2
+          key: cpu2.partid
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        - uuid: cb1d5e9f271e4fca9eae3e0f1ed5e0d7
+          name: currentSysPowerStatus
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.5.1.1.0
+          key: IMMcurrentSysPowerStatus
+          delay: '300'
+          history: 7d
+          valuemap:
+            name: 'IMM-MIB::systemHealthStat'
+        - uuid: f2c9786c61ba47148263e2c6a50660fa
+          name: PowerOnHours
+          type: SNMP_AGENT
+          snmp_oid: 'LENOVO-XCC-MIB:powerStatistics.2.0'
+          key: IMMpowerOnHours
+          delay: '3600'
+          history: 7d
+        - uuid: 32b09c0aa022465ba5d5355fbbf6830c
+          name: restartCount
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.5.1.3.0
+          key: IMMrestartCount
+          delay: '3600'
+          history: 7d
+        - uuid: 354949319ecf4427ac242bfff00688e4
+          name: 'System Health Status'
+          type: SNMP_AGENT
+          snmp_oid: 'LENOVO-XCC-MIB:systemHealthStat.0'
+          key: IMMsystemHealthStat
+          delay: '120'
+          history: 7d
+          valuemap:
+            name: 'IMM-MIB::systemHealthStat'
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: 0d82d25f67cf4e678a37c762eceead3b
+              expression: 'last(/Lenovo XCC SNMPv3/IMMsystemHealthStat)<>255'
+              name: 'Check System Health Status on {HOSTNAME}'
+              priority: WARNING
+            - uuid: 8fb7016e5eb64b93a04241bdfcb17c20
+              expression: 'nodata(/Lenovo XCC SNMPv3/IMMsystemHealthStat,1200s)=1'
+              name: 'nodata SNMP! Check IMM {HOSTNAME} status'
+              priority: INFO
+              description: 'Нет данных по SNMP'
+        - uuid: b1d30d1931a44a6d9baf45792d19715d
+          name: systemState
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.5.1.4.0
+          key: IMMsystemState
+          delay: '300'
+          history: 7d
+          valuemap:
+            name: 'IMM-MIB::systemHealthStat'
+        - uuid: 72b1dcb288b8478bba724e509a983d4f
+          name: 'LXPM Version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.1.1.3.5
+          key: lxpm
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        - uuid: 95c5aca17fa940ffa1fc09155d2e798b
+          name: 'Total power in use'
+          type: SNMP_AGENT
+          snmp_oid: 'LENOVO-XCC-MIB::fuelGaugeTotalPowerInUse.0'
+          key: power.inuse
+          delay: 120s
+          history: 7d
+          units: W
+        - uuid: a6c62ffc8426473aa97e4e5a99d8e43d
+          name: Trap
+          type: SNMP_TRAP
+          key: 'snmptrap["General"]'
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          logtimefmt: 'hh:mm:ss yyyy/MM/dd'
+          tags:
+            - tag: Application
+              value: Status
+        - uuid: 049947a381a24249a52b6307cfcd6110
+          name: 'UEFI Version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.1.1.3.4
+          key: uefi
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+      discovery_rules:
+        - uuid: 785ef2435a944f65a03545e690513e20
+          name: 'FAN Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#FANDESCR},.1.3.6.1.4.1.19046.11.1.1.3.2.1.2]'
+          key: fan.discovery
+          delay: 1h
+          description: 'Discovering fans from LENOVO-XCC-MIB::fanDescr'
+          item_prototypes:
+            - uuid: 6345725900f045739947fe99ef27480c
+              name: '{#FAN_DESCR}: Fan speed, %'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.3.2.1.3.{#SNMPINDEX}'
+              key: 'sensor.fan.speed.percentage[fanSpeed.{#SNMPINDEX}]'
+              delay: 5m
+              history: 30d
+              units: '%'
+              description: |
+                LENOVO-XCC-MIB
+                Fan  speed expressed in percent(%) of maximum RPM. An octet string expressed as 'ddd% of maximum' where: d is a decimal digit or blank space for a leading zero. If the fan is determined not to be running or the fan speed cannot be determined, the string will indicate 'Offline'.
+              preprocessing:
+                - type: REGEX
+                  parameters:
+                    - '(\d{1,3}) *%( of maximum)?'
+                    - \1
+              tags:
+                - tag: Application
+                  value: Fans
+            - uuid: d1494da1a5f746008fb5568104ed5acb
+              name: '{#FAN_DESCR}: Fan status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.3.2.1.10.{#SNMPINDEX}'
+              key: 'sensor.fan.status[fanHealthStatus.{#SNMPINDEX}]'
+              delay: 3m
+              history: 2w
+              trends: '0'
+              value_type: CHAR
+              description: |
+                LENOVO-XCC-MIB
+                A description of the fan measurement channel.
+              tags:
+                - tag: Application
+                  value: Fans
+              trigger_prototypes:
+                - uuid: 35167bd53f754460bab00ecd6114ba69
+                  expression: 'count(/Lenovo XCC SNMPv3/sensor.fan.status[fanHealthStatus.{#SNMPINDEX}],#1,"ne","{$FAN_OK_STATUS}")=1'
+                  name: '{#FAN_DESCR}: Fan is not in normal state'
+                  priority: INFO
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    Please check the fan unit
+        - uuid: 3300f20e38104a9a989a16effb15b0bd
+          name: 'Physical Disk Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},.1.3.6.1.4.1.19046.11.1.1.12.2.1.2]'
+          key: physicalDisk.discovery
+          description: 'LENOVO-XCC-MIB:diskIndex'
+          item_prototypes:
+            - uuid: b2c76cdedadb4f56b83e91c31c72ca07
+              name: '{#SNMPINDEX}: Physical disk part number'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.19046.11.1.1.13.1.3.1.19.{#SNMPINDEX}'
+              key: 'system.hw.physicaldisk.part_number[diskFruName.{#SNMPINDEX}]'
+              delay: 1h
+              history: 2w
+              trends: '0'
+              value_type: CHAR
+              description: |
+                LENOVO-XCC-MIB
+                disk module FRU name.
+              tags:
+                - tag: Application
+                  value: 'Physical Disks'
+            - uuid: aad0f4499f12497da1b05b440b99032a
+              name: '{#SNMPINDEX}: Physical disk status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.12.2.1.3.{#SNMPINDEX}'
+              key: 'system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}]'
+              delay: 3m
+              history: 30d
+              trends: '0'
+              value_type: CHAR
+              description: |
+                LENOVO-XCC-MIB
+                A description of the disk module status.
+              tags:
+                - tag: Application
+                  value: 'Physical Disks'
+              trigger_prototypes:
+                - uuid: b2badf0287984d518f247796a6ace445
+                  expression: 'count(/Lenovo XCC SNMPv3/system.hw.physicaldisk.status[diskHealthStatus.{#SNMPINDEX}],#1,"ne","{$DISK_OK_STATUS}")=1'
+                  name: '{#SNMPINDEX}: Physical disk is not in OK state'
+                  priority: WARNING
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    Please check physical disk for warnings or errors
+        - uuid: 2f248e19f10346a2825e108ee0918bc0
+          name: 'PSU Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#PSU_DESCR},.1.3.6.1.4.1.19046.11.1.1.11.2.1.2]'
+          key: psu.discovery
+          delay: 1h
+          description: 'LENOVO-XCC-MIB::powerFruName'
+          item_prototypes:
+            - uuid: d5b151ff652b4015a798611d25386fc2
+              name: '{#PSU_DESCR}: Power supply status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.11.2.1.6.{#SNMPINDEX}'
+              key: 'sensor.psu.status[powerHealthStatus.{#SNMPINDEX}]'
+              delay: 3m
+              history: 2w
+              trends: '0'
+              value_type: CHAR
+              description: |
+                LENOVO-XCC-MIB
+                A description of the power module status.
+              tags:
+                - tag: Application
+                  value: 'Power Supply'
+              trigger_prototypes:
+                - uuid: a784bdeb29614d33aeaf82d79ba2ac47
+                  expression: 'count(/Lenovo XCC SNMPv3/sensor.psu.status[powerHealthStatus.{#SNMPINDEX}],#1,"ne","{$PSU_OK_STATUS}")=1'
+                  name: '{#PSU_DESCR}: Power supply is not in normal state'
+                  priority: INFO
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    Please check the power supply unit for errors
+        - uuid: 469742e13fb64490bb64fe9b1bdfdd37
+          name: 'Temperature Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.19046.11.1.1.1.2.1.2]'
+          key: tempDescr.discovery
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SNMPVALUE}'
+                value: '(DIMM|PSU|PCH|RAID|RR|PCI).*'
+                formulaid: A
+          description: 'LENOVO-XCC-MIB::tempDescr'
+          item_prototypes:
+            - uuid: 313e901d27ee4c468bc06a927abf7061
+              name: '{#SNMPVALUE}: Temperature'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.1.2.1.3.{#SNMPINDEX}'
+              key: 'sensor.temp.value[tempReading.{#SNMPINDEX}]'
+              delay: 3m
+              history: 30d
+              value_type: FLOAT
+              units: °C
+              description: |
+                LENOVO-XCC-MIB
+                The measured temperature.
+              tags:
+                - tag: Application
+                  value: Temperature
+              trigger_prototypes:
+                - uuid: 0a47aac3fc3b413f9c8fbc5ac09acab2
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)>{$TEMP_CRIT:""}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)<{$TEMP_CRIT:""}-3'
+                  name: '{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}'
+                  priority: HIGH
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    This trigger uses temperature sensor values as well as temperature sensor status if available
+                - uuid: e13c714f6770449e81f4cfa4c9836471
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)>{$TEMP_WARN:""}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'max(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)>{$TEMP_WARN:""}-3'
+                  name: '{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}'
+                  priority: WARNING
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    This trigger uses temperature sensor values as well as temperature sensor status if available
+                  dependencies:
+                    - name: '{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}'
+                      expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)>{$TEMP_CRIT:""}'
+                      recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)<{$TEMP_CRIT:""}-3'
+                - uuid: 113f842de55f447d92b736d3fdbef011
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:""}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:""}+3'
+                  name: '{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}'
+                  priority: AVERAGE
+                  description: 'Last value: {ITEM.LASTVALUE1}.'
+        - uuid: 16cebe329c4944b9a1f42aca933ccfc0
+          name: 'Temperature Discovery Ambient'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.19046.11.1.1.1.2.1.2]'
+          key: tempDescr.discovery.ambient
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SNMPVALUE}'
+                value: 'Ambient.*'
+                formulaid: A
+          item_prototypes:
+            - uuid: e6f353d5550647f486904ff6c95a1d93
+              name: 'Ambient: Temperature'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.1.2.1.3.{#SNMPINDEX}'
+              key: 'sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}]'
+              delay: 3m
+              history: 30d
+              value_type: FLOAT
+              units: °C
+              description: |
+                LENOVO-XCC-MIB
+                The measured temperature Ambient
+              tags:
+                - tag: Application
+                  value: Temperature
+              trigger_prototypes:
+                - uuid: 50ee5c00b8fc497fb1a086d141b5389c
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"Ambient"}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"Ambient"}-3'
+                  name: 'Ambient: Temperature is above critical threshold: >{$TEMP_CRIT:"Ambient"}'
+                  priority: HIGH
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    This trigger uses temperature sensor values as well as temperature sensor status if available
+                - uuid: aabb563297b845a09badc5bce187a629
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)>{$TEMP_WARN:"Ambient"}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)<{$TEMP_WARN:"Ambient"}-3'
+                  name: 'Ambient: Temperature is above warning threshold: >{$TEMP_WARN:"Ambient"}'
+                  priority: WARNING
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    This trigger uses temperature sensor values as well as temperature sensor status if available
+                  dependencies:
+                    - name: 'Ambient: Temperature is above critical threshold: >{$TEMP_CRIT:"Ambient"}'
+                      expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"Ambient"}'
+                      recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"Ambient"}-3'
+                - uuid: 47df99d13b5349159ffe9eca2c6f421a
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:"Ambient"}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:"Ambient"}+3'
+                  name: 'Ambient: Temperature is too low: <{$TEMP_CRIT_LOW:"Ambient"}'
+                  priority: AVERAGE
+                  description: 'Last value: {ITEM.LASTVALUE1}.'
+        - uuid: c375605fee334b52b949c1684ae4e237
+          name: 'Temperature Discovery CPU'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.19046.11.1.1.1.2.1.2]'
+          key: tempDescr.discovery.cpu
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SNMPVALUE}'
+                value: 'CPU [0-9]* Temp'
+                formulaid: A
+          description: 'LENOVO-XCC-MIB::tempDescr'
+          item_prototypes:
+            - uuid: c86bda92a0714113a631f7b58af9dd6c
+              name: 'CPU: Temperature'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.1.2.1.3.{#SNMPINDEX}'
+              key: 'sensor.temp.value[tempReading.CPU.{#SNMPINDEX}]'
+              delay: 3m
+              history: 30d
+              value_type: FLOAT
+              units: °C
+              description: |
+                LENOVO-XCC-MIB
+                The measured temperature CPU
+              tags:
+                - tag: Application
+                  value: Temperature
+              trigger_prototypes:
+                - uuid: 75e4cae308124658869bdb9b44f71745
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.CPU.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"CPU"}'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.CPU.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"CPU"}-3'
+                  name: 'CPU: Temperature is above critical threshold: >{$TEMP_CRIT:"CPU"}'
+                  priority: HIGH
+                  description: |
+                    Last value: {ITEM.LASTVALUE1}.
+                    This trigger uses temperature sensor values as well as temperature sensor status if available
+        - uuid: f00f2f508dcd4aeb833d5ab00138675c
+          name: 'Voltage Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#VOLTDESCR},1.3.6.1.4.1.19046.11.1.1.2.2.1.2]'
+          key: voltDescr.discovery
+          delay: 1h
+          description: 'LENOVO-XCC-MIB::voltDescr'
+          item_prototypes:
+            - uuid: 36b62b1edf214931b136d8593ed61d80
+              name: '{#VOLTDESCR}: Status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.2.2.1.11.{#SNMPINDEX}'
+              key: 'voltage.status[{#SNMPINDEX}]'
+              delay: 3m
+              history: 2w
+              trends: '0'
+              value_type: CHAR
+              description: |
+                LENOVO-XCC-MIB
+                A description of the voltage component status.
+              tags:
+                - tag: Application
+                  value: Voltage
+              trigger_prototypes:
+                - uuid: ac793d10c4324bc0837ed78eaec74d92
+                  expression: 'find(/Lenovo XCC SNMPv3/voltage.status[{#SNMPINDEX}],#2,"like","Normal")=0'
+                  name: '{#VOLTDESCR}: voltage is not in normal state'
+                  priority: WARNING
+                  description: 'Last value: {ITEM.LASTVALUE1}.'
+            - uuid: dd41cefe17b3423da376f1c9cda361bd
+              name: '{#VOLTDESCR}: Voltage'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.2.2.1.3.{#SNMPINDEX}'
+              key: 'voltage[{#SNMPINDEX}]'
+              delay: 3m
+              history: 2w
+              value_type: FLOAT
+              units: V
+              description: |
+                LENOVO-XCC-MIB
+                The measured voltage.
+              preprocessing:
+                - type: RTRIM
+                  parameters:
+                    - '".*'
+                - type: LTRIM
+                  parameters:
+                    - '.*"'
+              tags:
+                - tag: Application
+                  value: Voltage
+      macros:
+        - macro: '{$DISK_OK_STATUS}'
+          value: Normal
+        - macro: '{$FAN_OK_STATUS}'
+          value: Normal
+        - macro: '{$HEALTH_CRIT_STATUS}'
+          value: '2'
+        - macro: '{$HEALTH_DISASTER_STATUS}'
+          value: '0'
+        - macro: '{$HEALTH_WARN_STATUS}'
+          value: '4'
+        - macro: '{$PSU_OK_STATUS}'
+          value: Normal
+        - macro: '{$TEMP_CRIT}'
+          value: '60'
+        - macro: '{$TEMP_CRIT:"Ambient"}'
+          value: '35'
+        - macro: '{$TEMP_CRIT_LOW}'
+          value: '5'
+        - macro: '{$TEMP_WARN}'
+          value: '50'
+        - macro: '{$TEMP_WARN:"Ambient"}'
+          value: '30'
+      valuemaps:
+        - uuid: 6e1a86cbdafc4b5499b4e748afc078b7
+          name: 'IMM-MIB::systemHealthStat'
+          mappings:
+            - value: '0'
+              newvalue: nonRecoverable
+            - value: '2'
+              newvalue: critical
+            - value: '4'
+              newvalue: nonCritical
+            - value: '255'
+              newvalue: normal
