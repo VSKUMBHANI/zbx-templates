@@ -1,2 +1,4 @@
 # zbx-templates
-Available Zabbix Tempates
+Available Zabbix Templates
+
+Templates are with some custom items and triggers.
