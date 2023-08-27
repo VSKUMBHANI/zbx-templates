@@ -1,3 +1,0 @@
-# Zabbix Running on Low Memory Mode
-Increasing the Zabbix Server Cache. It is pretty common (with the default settings only) get a warning about your Zabbix value cache running on low memory mode at your dashboard or logs.
-
