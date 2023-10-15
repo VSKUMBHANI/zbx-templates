@@ -16,68 +16,20 @@ zabbix_export:
       groups:
         - name: 'Templates/Servers Hardware'
       items:
-        - uuid: 5c2a7e15268e4326b3241c33581b0122
-          name: 'BMC (Active) Current Version'
+        - uuid: f545330519c64f7ebc426e9537b262ae
+          name: 'Contact Info (Company Name)'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.1.1.3.1
-          key: bmcactive
-          history: 7d
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.8.3.1.0
+          key: contactcompany
+          history: 2d
           trends: '0'
           value_type: TEXT
-        - uuid: 0f549f9fab8b43ea8c4e5da79ce851ee
-          name: 'BMC (Backup) Current Version'
+        - uuid: d3ddbd1c126d4e0cbcf3dd08312bb735
+          name: 'Contact Info (Contact Name)'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.1.1.3.3
-          key: bmcbackup
-          history: 7d
-          trends: '0'
-          value_type: TEXT
-        - uuid: ad44faed378a4fc188028e7ccc838836
-          name: 'CPU1 Total Core'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.7.1
-          key: cpu1.core
-          history: 7d
-          trends: '0'
-          value_type: TEXT
-        - uuid: 4db84a8615a443ae9ffffe842333d732
-          name: 'CPU1 Model'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.12.1
-          key: cpu1.model
-          history: 7d
-          trends: '0'
-          value_type: TEXT
-        - uuid: 7ce7e41eb6184a8798fca6afffb376c1
-          name: 'CPU1 Part ID'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.4.1
-          key: cpu1.partid
-          history: 7d
-          trends: '0'
-          value_type: TEXT
-        - uuid: c815f28da3aa4864b6b6c69c9086c273
-          name: 'CPU2 Total Core'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.7.2
-          key: cpu2.core
-          history: 7d
-          trends: '0'
-          value_type: TEXT
-        - uuid: e728189babba4bab86bf11e801af1c6d
-          name: 'CPU2 Model'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.12.2
-          key: cpu2.model
-          history: 7d
-          trends: '0'
-          value_type: TEXT
-        - uuid: cc0cc661ddb44e8f97dea568e7db2112
-          name: 'CPU2 Part ID'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.20.1.4.2
-          key: cpu2.partid
-          history: 7d
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.8.3.2.0
+          key: contactname
+          history: 2d
           trends: '0'
           value_type: TEXT
         - uuid: 96a2c78c5bfa47bf8a7ea239791832ff
@@ -138,14 +90,54 @@ zabbix_export:
           trends: 5d
           valuemap:
             name: systemState
-        - uuid: 72b1dcb288b8478bba724e509a983d4f
-          name: 'LXPM Version'
+        - uuid: 882191ec797a4c0da8db242a5120cb35
+          name: 'Machine Model'
           type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.1.1.3.5
-          key: lxpm
-          history: 7d
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.1.5.2.1.2.0
+          key: machinemodel
+          delay: 1h
+          history: 2d
           trends: '0'
           value_type: TEXT
+          tags:
+            - tag: Application
+              value: hardware
+        - uuid: e65f9b45f79c424182111c6532a9f792
+          name: 'Machine Name'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.1.5.2.1.5.0
+          key: machinename
+          delay: 1h
+          history: 2d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            - tag: Application
+              value: hardware
+        - uuid: 8ea7d8ba65294108b6ac794ca2d370b5
+          name: 'Machine Serial Number'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.1.5.2.1.3.0
+          key: machinesrno
+          delay: 1h
+          history: 2d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            - tag: Application
+              value: hardware
+        - uuid: 2a166c480a8044619342c3fe0f499ee6
+          name: 'Machine Type'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.19046.11.1.1.5.2.1.1.0
+          key: machinetype
+          delay: 1h
+          history: 2d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            - tag: Application
+              value: hardware
         - uuid: 95c5aca17fa940ffa1fc09155d2e798b
           name: 'Total power in use'
           type: SNMP_AGENT
@@ -183,14 +175,6 @@ zabbix_export:
           tags:
             - tag: Application
               value: Status
-        - uuid: 049947a381a24249a52b6307cfcd6110
-          name: 'UEFI Version'
-          type: SNMP_AGENT
-          snmp_oid: .1.3.6.1.4.1.19046.11.1.1.5.1.1.3.4
-          key: uefi
-          history: 7d
-          trends: '0'
-          value_type: TEXT
         - uuid: 32b09c0aa022465ba5d5355fbbf6830c
           name: 'Restart Count'
           type: SNMP_AGENT
@@ -231,6 +215,137 @@ zabbix_export:
               history: 2d
               trends: '0'
               value_type: TEXT
+        - uuid: 0110f8bba9dd4ed382326a2bbce101a2
+          name: 'Firmware Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#FIRMINDEX},1.3.6.1.4.1.19046.11.1.1.5.1.1.1,{#FIRMTYPE},1.3.6.1.4.1.19046.11.1.1.5.1.1.2]'
+          key: firmwarediscovery
+          item_prototypes:
+            - uuid: d2791b4937754f75be0ff0a7b48e64b2
+              name: 'Release Date: {#FIRMTYPE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.1.1.4.{#FIRMINDEX}'
+              key: 'reldate[{#FIRMINDEX}]'
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: Application
+                  value: Firmware
+            - uuid: 7b8bea07b1ae47bd9fd275cedd94a2dd
+              name: 'Version: {#FIRMTYPE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.1.1.3.{#FIRMINDEX}'
+              key: 'version[{#FIRMINDEX}]'
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: Application
+                  value: Firmware
+        - uuid: bf3327737d6845d6b40061fe667330c2
+          name: 'Memory module Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#MEMINDEX},1.3.6.1.4.1.19046.11.1.1.5.21.1.1,{#MEMDISC},1.3.6.1.4.1.19046.11.1.1.5.21.1.2,{#MEMTYPE},1.3.6.1.4.1.19046.11.1.1.5.21.1.6]'
+          key: memorydiscovery
+          item_prototypes:
+            - uuid: f7e30266c79041bca2f2a2979146fd71
+              name: '{#MEMDISC} ({#MEMTYPE}) PartNumber'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.21.1.11.{#MEMINDEX}'
+              key: 'mempartno[{#MEMINDEX}]'
+              history: 2d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: hardware
+                  value: memory
+            - uuid: b5089d94c83e4a21a594fc106ffcf136
+              name: '{#MEMDISC} ({#MEMTYPE}) Serial'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.21.1.4.{#MEMINDEX}'
+              key: 'memserial[{#MEMINDEX}]'
+              history: 2d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: hardware
+                  value: memory
+            - uuid: ed004f1dd8584171843d763cd54ad4db
+              name: '{#MEMDISC} ({#MEMTYPE}) Size(GB)'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.21.1.7.{#MEMINDEX}'
+              key: 'memsize[{#MEMINDEX}]'
+              history: 2d
+              trends: 5d
+              units: '!GB'
+              tags:
+                - tag: hardware
+                  value: memory
+            - uuid: 49f837e86c4c49e697fe58de16426ad2
+              name: '{#MEMDISC} ({#MEMTYPE}) Speed(MHz)'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.21.1.9.{#MEMINDEX}'
+              key: 'memspeed[{#MEMINDEX}]'
+              history: 2d
+              trends: 5d
+              units: '!MHz'
+              tags:
+                - tag: hardware
+                  value: memory
+            - uuid: a7864055468d4baf93ed5f6eab65ec38
+              name: '{#MEMDISC} ({#MEMTYPE}) Status'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.21.1.8.{#MEMINDEX}'
+              key: 'memstatus[{#MEMINDEX}]'
+              history: 2d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: hardware
+                  value: memory
+        - uuid: 08fb31caf1304c2dac559dfb1c992d43
+          name: 'Network card Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#NETINDEX},1.3.6.1.4.1.19046.11.1.1.14.4.1.1,{#NETNAME},1.3.6.1.4.1.19046.11.1.1.14.4.1.2]'
+          key: network.card
+          description: 'Discover Ethernet cards.'
+          item_prototypes:
+            - uuid: 8c34cd0f2aaa4ef2ab039f6dcde9e5bb
+              name: 'Network Adapter Link speed: {#NETNAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.14.4.1.21.{#NETINDEX}'
+              key: 'adapterlinkspeed[{#NETINDEX}]'
+              history: 2d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: type
+                  value: network
+                - tag: type
+                  value: status
+            - uuid: f50c8381245e412eb824d96ce4348a5f
+              name: 'Network Adapter Link status: {#NETNAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.14.4.1.20.{#NETINDEX}'
+              key: 'adapterlinkstatus[{#NETINDEX}]'
+              history: 2d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: type
+                  value: network
+                - tag: type
+                  value: status
+            - uuid: 718837c4b54a4335833f2f0a7799eb24
+              name: 'Network Adapter: {#NETNAME}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.14.4.1.4.{#NETINDEX}'
+              key: 'adapterstatus[{#NETINDEX}]'
+              history: 2d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: type
+                  value: network
         - uuid: 3300f20e38104a9a989a16effb15b0bd
           name: 'Physical Disk Discovery'
           type: SNMP_AGENT
@@ -277,6 +392,34 @@ zabbix_export:
                     Last value: {ITEM.LASTVALUE1}.
                     Please check physical disk for warnings or errors
                   manual_close: 'YES'
+        - uuid: 1b927fceba8d4bbeab9b5438c2a8a4a8
+          name: 'Processor Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#CPUINDEX},1.3.6.1.4.1.19046.11.1.1.5.20.1.1,{#CPUMODEL},1.3.6.1.4.1.19046.11.1.1.5.20.1.12]'
+          key: processor.discovery
+          item_prototypes:
+            - uuid: 1bf88e5b05b74b67b394a7102b68df8f
+              name: 'CPU Core:{#CPUINDEX} {#CPUMODEL}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.20.1.7.{#CPUINDEX}'
+              key: 'cpucore[{#CPUINDEX}]'
+              history: 2d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: hardware
+                  value: processor
+            - uuid: a2bda2996f984766b25c718529692def
+              name: 'CPU:{#CPUINDEX} {#CPUMODEL}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.5.20.1.11.{#CPUINDEX}'
+              key: 'cpustatus[{#CPUINDEX}]'
+              history: 2d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: hardware
+                  value: processor
         - uuid: 2f248e19f10346a2825e108ee0918bc0
           name: 'PSU Discovery'
           type: SNMP_AGENT
@@ -394,6 +537,9 @@ zabbix_export:
               trends: '0'
               value_type: TEXT
               description: 'The name of a particular RAID storagepool.'
+              tags:
+                - tag: hardware
+                  value: storage
             - uuid: 6259b48493da47eaa54f8691edaa1f89
               name: 'Storage Pool {#SNMPINDEX} Drives'
               type: SNMP_AGENT
@@ -435,20 +581,15 @@ zabbix_export:
           snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.19046.11.1.1.1.2.1.2]'
           key: tempDescr.discovery
           delay: 1h
-          filter:
-            conditions:
-              - macro: '{#SNMPVALUE}'
-                value: '(DIMM|PSU|PCH|RAID|RR|PCI).*'
-                formulaid: A
           description: 'LENOVO-XCC-MIB::tempDescr'
           item_prototypes:
             - uuid: 313e901d27ee4c468bc06a927abf7061
               name: '{#SNMPVALUE}: Temperature'
               type: SNMP_AGENT
               snmp_oid: '1.3.6.1.4.1.19046.11.1.1.1.2.1.3.{#SNMPINDEX}'
-              key: 'sensor.temp.value[tempReading.{#SNMPINDEX}]'
-              delay: 3m
-              history: 30d
+              key: 'sensor.temp.value[{#SNMPINDEX}]'
+              history: 2d
+              trends: 5d
               value_type: FLOAT
               units: °C
               description: |
@@ -459,18 +600,18 @@ zabbix_export:
                   value: Temperature
               trigger_prototypes:
                 - uuid: 0a47aac3fc3b413f9c8fbc5ac09acab2
-                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)>{$TEMP_CRIT:""}'
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)>{$TEMP_CRIT:""}'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)<{$TEMP_CRIT:""}-3'
+                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)<{$TEMP_CRIT:""}-3'
                   name: '{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}'
                   priority: HIGH
                   description: |
                     Last value: {ITEM.LASTVALUE1}.
                     This trigger uses temperature sensor values as well as temperature sensor status if available
                 - uuid: e13c714f6770449e81f4cfa4c9836471
-                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)>{$TEMP_WARN:""}'
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)>{$TEMP_WARN:""}'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'max(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)>{$TEMP_WARN:""}-3'
+                  recovery_expression: 'max(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)>{$TEMP_WARN:""}-3'
                   name: '{#SNMPVALUE}: Temperature is above warning threshold: >{$TEMP_WARN:""}'
                   priority: WARNING
                   description: |
@@ -478,114 +619,15 @@ zabbix_export:
                     This trigger uses temperature sensor values as well as temperature sensor status if available
                   dependencies:
                     - name: '{#SNMPVALUE}: Temperature is above critical threshold: >{$TEMP_CRIT:""}'
-                      expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)>{$TEMP_CRIT:""}'
-                      recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)<{$TEMP_CRIT:""}-3'
+                      expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)>{$TEMP_CRIT:""}'
+                      recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)<{$TEMP_CRIT:""}-3'
                 - uuid: 113f842de55f447d92b736d3fdbef011
-                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:""}'
+                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:""}'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:""}+3'
+                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:""}+3'
                   name: '{#SNMPVALUE}: Temperature is too low: <{$TEMP_CRIT_LOW:""}'
                   priority: AVERAGE
                   description: 'Last value: {ITEM.LASTVALUE1}.'
-        - uuid: 16cebe329c4944b9a1f42aca933ccfc0
-          name: 'Temperature Discovery Ambient'
-          type: SNMP_AGENT
-          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.19046.11.1.1.1.2.1.2]'
-          key: tempDescr.discovery.ambient
-          delay: 1h
-          filter:
-            conditions:
-              - macro: '{#SNMPVALUE}'
-                value: 'Ambient.*'
-                formulaid: A
-          item_prototypes:
-            - uuid: e6f353d5550647f486904ff6c95a1d93
-              name: 'Ambient: Temperature'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.1.2.1.3.{#SNMPINDEX}'
-              key: 'sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}]'
-              delay: 3m
-              history: 30d
-              value_type: FLOAT
-              units: °C
-              description: |
-                LENOVO-XCC-MIB
-                The measured temperature Ambient
-              tags:
-                - tag: Application
-                  value: Temperature
-              trigger_prototypes:
-                - uuid: 50ee5c00b8fc497fb1a086d141b5389c
-                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"Ambient"}'
-                  recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"Ambient"}-3'
-                  name: 'Ambient: Temperature is above critical threshold: >{$TEMP_CRIT:"Ambient"}'
-                  priority: HIGH
-                  description: |
-                    Last value: {ITEM.LASTVALUE1}.
-                    This trigger uses temperature sensor values as well as temperature sensor status if available
-                  manual_close: 'YES'
-                - uuid: aabb563297b845a09badc5bce187a629
-                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)>{$TEMP_WARN:"Ambient"}'
-                  recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)<{$TEMP_WARN:"Ambient"}-3'
-                  name: 'Ambient: Temperature is above warning threshold: >{$TEMP_WARN:"Ambient"}'
-                  priority: WARNING
-                  description: |
-                    Last value: {ITEM.LASTVALUE1}.
-                    This trigger uses temperature sensor values as well as temperature sensor status if available
-                  manual_close: 'YES'
-                  dependencies:
-                    - name: 'Ambient: Temperature is above critical threshold: >{$TEMP_CRIT:"Ambient"}'
-                      expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"Ambient"}'
-                      recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"Ambient"}-3'
-                - uuid: 47df99d13b5349159ffe9eca2c6f421a
-                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)<{$TEMP_CRIT_LOW:"Ambient"}'
-                  recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.Ambient.{#SNMPINDEX}],5m)>{$TEMP_CRIT_LOW:"Ambient"}+3'
-                  name: 'Ambient: Temperature is too low: <{$TEMP_CRIT_LOW:"Ambient"}'
-                  priority: AVERAGE
-                  description: 'Last value: {ITEM.LASTVALUE1}.'
-                  manual_close: 'YES'
-        - uuid: c375605fee334b52b949c1684ae4e237
-          name: 'Temperature Discovery CPU'
-          type: SNMP_AGENT
-          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.4.1.19046.11.1.1.1.2.1.2]'
-          key: tempDescr.discovery.cpu
-          delay: 1h
-          filter:
-            conditions:
-              - macro: '{#SNMPVALUE}'
-                value: 'CPU [0-9]* Temp'
-                formulaid: A
-          description: 'LENOVO-XCC-MIB::tempDescr'
-          item_prototypes:
-            - uuid: c86bda92a0714113a631f7b58af9dd6c
-              name: 'CPU: Temperature'
-              type: SNMP_AGENT
-              snmp_oid: '1.3.6.1.4.1.19046.11.1.1.1.2.1.3.{#SNMPINDEX}'
-              key: 'sensor.temp.value[tempReading.CPU.{#SNMPINDEX}]'
-              delay: 3m
-              history: 30d
-              value_type: FLOAT
-              units: °C
-              description: |
-                LENOVO-XCC-MIB
-                The measured temperature CPU
-              tags:
-                - tag: Application
-                  value: Temperature
-              trigger_prototypes:
-                - uuid: 75e4cae308124658869bdb9b44f71745
-                  expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.CPU.{#SNMPINDEX}],5m)>{$TEMP_CRIT:"CPU"}'
-                  recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'avg(/Lenovo XCC SNMPv3/sensor.temp.value[tempReading.CPU.{#SNMPINDEX}],5m)<{$TEMP_CRIT:"CPU"}-3'
-                  name: 'CPU: Temperature is above critical threshold: >{$TEMP_CRIT:"CPU"}'
-                  priority: HIGH
-                  description: |
-                    Last value: {ITEM.LASTVALUE1}.
-                    This trigger uses temperature sensor values as well as temperature sensor status if available
-                  manual_close: 'YES'
         - uuid: f00f2f508dcd4aeb833d5ab00138675c
           name: 'Voltage Discovery'
           type: SNMP_AGENT
