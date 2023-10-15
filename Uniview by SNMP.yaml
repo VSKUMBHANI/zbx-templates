@@ -1,0 +1,231 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    - uuid: 2ff37df973e4427ba9499099f686617b
+      template: 'Uniview by SNMP'
+      name: 'Uniview by SNMP'
+      description: |
+        Created by VijayK.
+        
+        GitHub: https://github.com/VSKUMBHANI/
+      groups:
+        - name: Templates
+      items:
+        - uuid: 94487c50e7384130b6708bd2c03f3f95
+          name: 'Camera offline'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.25506.20.4.0
+          key: Camera.Offline
+          history: 2d
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  const data = value;
+                  //const data = fields.split("IPC.");
+                  const regex = /IPC\.NO:\s+(\d+)\s+IPC\.Name:\s+(.+?)\s+IPC\.IP:\s+([\d\.]+)\s+IPC\.Port:\s+(\d+)\s+IPC\.Status:\s+(.+?)\s+IPC\.Model:\s+(.+?)\s+IPC\.Software:\s+(.+?)\s+/g;
+                  const arrcamoffline = [];
+                  const arrcamonline = [];
+                  var result ='';
+                  var match = regex.exec(data);
+                  while (match !== null) {
+                    const no = match[1];
+                    const name = match[2];
+                    const ip = match[3];
+                    const port = match[4];
+                    const status = match[5];
+                    const model = match[6];
+                  
+                  result = "\nCamera "+name +" is "+status+" with IP "+ip;
+                  //const wordToFind = "OFFLINE";
+                  const camoff = result.search("OFFLINE");
+                  //console.log(camoff);
+                  if(camoff != -1){
+                      arrcamoffline.push(result);
+                  }
+                  else{
+                        arrcamonline.push(result);
+                  }
+                  match = regex.exec(data);
+                  }
+                  //console.log("ONLINE" + arrcamonline);
+                  return ("Camera status...!!! \n" + arrcamoffline);
+          triggers:
+            - uuid: 5486c97a66f54217bf91f8bde021d0a6
+              expression: 'find(/Uniview by SNMP/Camera.Offline,,,"OFFLINE")=1'
+              name: 'Camera offline'
+              priority: WARNING
+              manual_close: 'YES'
+        - uuid: 7086ec908bd04a0abfae6fae2b8af276
+          name: Camera
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.25506.20.4.0
+          key: CameraList
+          history: 1d
+          trends: '0'
+          value_type: TEXT
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  const data = value;
+                  //const data = fields.split("IPC.");
+                  const regex = /IPC\.NO:\s+(\d+)\s+IPC\.Name:\s+(.+?)\s+IPC\.IP:\s+([\d\.]+)\s+IPC\.Port:\s+(\d+)\s+IPC\.Status:\s+(.+?)\s+IPC\.Model:\s+(.+?)\s+IPC\.Software:\s+(.+?)\s+/g;
+                  const arr = [];
+                  var result ='';
+                  var match = regex.exec(data);
+                  while (match !== null) {
+                    const no = match[1];
+                    const name = match[2];
+                    const ip = match[3];
+                    const port = match[4];
+                    const status = match[5];
+                    const model = match[6];
+                  
+                  result = "Camera "+name +" is "+status+" with IP "+ip;
+                  arr.push(result);
+                  
+                  match = regex.exec(data);
+                  }
+                  return arr;
+        - uuid: fc967182cc7e409ca52980352a5d5fe2
+          name: 'CPU Info'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.25506.20.8.0
+          key: CPU
+          delay: 10s
+          history: 1d
+          trends: '0'
+          value_type: TEXT
+        - uuid: c104937e154b4e17afe73fc4e9517f50
+          name: 'Device Info'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.25506.20.1.0
+          key: Device
+          history: 2d
+          trends: '0'
+          value_type: TEXT
+          inventory_link: HARDWARE_FULL
+        - uuid: c7a95f9297b74cfb92473fdb0a53e047
+          name: 'ICMP ping'
+          type: SIMPLE
+          key: icmpping
+          history: 2d
+          trends: 5d
+          valuemap:
+            name: icmpvalue
+          tags:
+            - tag: component
+              value: health
+            - tag: component
+              value: network
+        - uuid: efa86c4ea70e4e1a8479da80f6d1e04c
+          name: 'ICMP loss'
+          type: SIMPLE
+          key: icmppingloss
+          history: 2d
+          trends: 5d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            - tag: component
+              value: health
+            - tag: component
+              value: network
+        - uuid: 91aacce8bf15492182ce4c777bc8e8f6
+          name: 'ICMP response time'
+          type: SIMPLE
+          key: icmppingsec
+          history: 2d
+          trends: 5d
+          value_type: FLOAT
+          units: s
+          tags:
+            - tag: component
+              value: health
+            - tag: component
+              value: network
+        - uuid: 19b6b5416af84bcdb2058944e47fc2b5
+          name: 'Number of CPUs'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},1.3.6.1.2.1.25.3.3.1.1]'
+          key: 'system.cpu.num[snmp]'
+          history: 2d
+          trends: 5d
+          description: |
+            MIB: HOST-RESOURCES-MIB
+            Count the number of CPU cores by counting number of cores discovered in hrProcessorTable using LLD
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  //count the number of cores
+                  return JSON.parse(value).length;
+          tags:
+            - tag: component
+              value: cpu
+        - uuid: d4825a5303f84236adf4e0de2addd950
+          name: 'Uptime (hardware)'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.25.1.1.0
+          key: 'system.hw.uptime[hrSystemUptime.0]'
+          delay: 30s
+          history: 2d
+          trends: '0'
+          units: uptime
+          description: |
+            MIB: HOST-RESOURCES-MIB
+            The amount of time since this host was last initialized. Note that this is different from sysUpTime in the SNMPv2-MIB [RFC1907] because sysUpTime is the uptime of the network management portion of the system.
+          preprocessing:
+            - type: CHECK_NOT_SUPPORTED
+              parameters:
+                - ''
+              error_handler: CUSTOM_VALUE
+              error_handler_params: '0'
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: component
+              value: system
+        - uuid: b2b367add7d64e14a73770e8d6fb80df
+          name: 'SNMP agent availability'
+          type: INTERNAL
+          key: 'zabbix[host,snmp,available]'
+          history: 2d
+          trends: 5d
+          description: |
+            Availability of SNMP checks on the host. The value of this item corresponds to availability icons in the host list.
+            Possible value:
+            0 - not available
+            1 - available
+            2 - unknown
+          valuemap:
+            name: available
+          tags:
+            - tag: component
+              value: health
+            - tag: component
+              value: network
+      valuemaps:
+        - uuid: 9f6c71fc877c4adba1d5a004288e6368
+          name: available
+          mappings:
+            - value: '0'
+              newvalue: 'Not available'
+            - value: '1'
+              newvalue: Available
+            - value: '2'
+              newvalue: Unknown
+        - uuid: 243888e4f9af438b8ea0b21e6231572a
+          name: icmpvalue
+          mappings:
+            - value: '1'
+              newvalue: Up
+            - value: '0'
+              newvalue: Down
