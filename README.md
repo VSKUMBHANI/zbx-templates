@@ -19,7 +19,7 @@ Following Templates are in store.
 5. Dell iDRAC-9 by SNMP.yaml
 6. Fortigate by SNMP.yaml
 7. HP LaserJet SNMP.yaml
-8. Lenovo XCC SNMPv3.yaml
+8. Lenovo XCC SNMPv3.yaml (Before import this template 1st import Linux by SNMP)
 9. Ricoh Printer by SNMP.yaml
 10. Synology DiskStation SNMPv3.yaml
 11. Uniview (UNV) by SNMP.yaml
@@ -27,4 +27,5 @@ Following Templates are in store.
 13. VMware Hypervisor.yaml
 14. VMware.yaml
 15. Windows by SNMP.yaml
-16. Windows by Zabbix agent.yaml 
+16. Windows by Zabbix agent.yaml
+17. Linux by SNMP.yaml
