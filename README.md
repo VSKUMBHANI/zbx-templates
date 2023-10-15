@@ -9,7 +9,7 @@ Templates are with some custom items and triggers.
  Expression: \b192\.168\.11\.([1-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-4])\b (In my case for my local ip range 192.168.11.0/24)<br>
  This is used to trigger user login.
  
- <br>============================================================================================================================
+============================================================================================================================
 Following Templates are in store.
 
 1. APC UPS by SNMP.yaml
