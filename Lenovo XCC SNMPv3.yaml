@@ -11,6 +11,8 @@ zabbix_export:
         Template is used for XCC modified by VijayK.
         
         GitHub: https://github.com/VSKUMBHANI/
+        
+        It required Linux by SNMP template before importing this template.
       templates:
         - name: 'Linux by SNMP'
       groups:
