@@ -21,7 +21,7 @@ Following Templates are in store.
 8. Lenovo XCC SNMPv3.yaml
 9. Ricoh Printer by SNMP.yaml
 10. Synology DiskStation SNMPv3.yaml
-11. Uniview by SNMP.yaml
+11. Uniview (UNV) by SNMP.yaml
 12. VMware Guest.yaml
 13. VMware Hypervisor.yaml
 14. VMware.yaml
