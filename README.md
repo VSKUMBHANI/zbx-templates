@@ -4,12 +4,14 @@ Available Zabbix Templates
 Templates are with some custom items and triggers.
 =============================================================================================================================
  Specify Global Regular Expression settings as "LocalIP" if you are using a Windows by Zabbix agent template.<br>
+ 
  <b>Name:</b> LocalIP<br>
  <b>Expression Type:</b> True<br>
  <b>Expression:</b> \b192\.168\.11\.([1-9]|[1-9]\d|1\d\d|2[0-4]\d|25[0-4])\b (In my case for my local ip range 192.168.11.0/24)<br>
- This is used to trigger user login.
  
-=====
+ This is used in a trigger "User Login" defined in Windows by Zabbix agent.
+ 
+==========================================================================
 
 <b>Following Templates are in store.</b>
 
