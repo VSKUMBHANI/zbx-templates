@@ -1,0 +1,118 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    - uuid: 4aff19ce4d6646e7b4f12d46f38ff5b9
+      template: 'Grandstream by SNMP'
+      name: 'Grandstream by SNMP'
+      description: |
+        Created by VijayK.
+        
+        Model: GWN7664/LR
+        GitHub: https://github.com/VSKUMBHANI/
+      groups:
+        - name: Templates
+      items:
+        - uuid: 2723e8db3fdc452c879a3fb5136cc67f
+          name: 'IP Address'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.42397.1.1.2.5.0
+          key: ipAddr
+          history: 2d
+          trends: '0'
+          value_type: TEXT
+          inventory_link: HOST_NETWORKS
+        - uuid: 2d0d75230f7540e9a44c378961fe2952
+          name: 'MAC Address'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.42397.1.1.2.3.0
+          key: macAddr
+          history: 2d
+          trends: '0'
+          value_type: TEXT
+          inventory_link: MACADDRESS_A
+        - uuid: bbf0f02a80404c10af1e5a26a2395055
+          name: Model
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.42397.1.1.2.1.0
+          key: model
+          history: 2d
+          trends: '0'
+          value_type: TEXT
+          inventory_link: MODEL
+        - uuid: f8fe7e0ccc584510863166fce809e691
+          name: Name
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.42397.1.1.2.2.0
+          key: name
+          history: 2d
+          trends: '0'
+          value_type: TEXT
+          inventory_link: NAME
+        - uuid: 9f45f60ea9fe41f9a94284240e15491a
+          name: 'Up Time'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.42397.1.1.2.6.0
+          key: sysUpTime
+          history: 2d
+          trends: 5d
+          units: uptime
+      discovery_rules:
+        - uuid: f8b15943046942ff9a992d54aaa843bf
+          name: 'WLAN Discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#WLANINDEX},1.3.6.1.4.1.42397.1.1.3.2.1.1,{#SSID},1.3.6.1.4.1.42397.1.1.3.2.1.2]'
+          key: wlandiscovery
+          item_prototypes:
+            - uuid: aac24967dba74924a91f1cf72bb2f8e5
+              name: '{#SSID}: Total rx Data bytes'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.42397.1.1.3.2.1.9.{#WLANINDEX}'
+              key: 'totalrxbytes[{#WLANINDEX}]'
+              history: 2d
+              trends: 5d
+              units: B
+              tags:
+                - tag: network
+                  value: rx
+            - uuid: 0e68bb5b52a647b0a2cf2f1c77c992e2
+              name: '{#SSID}: Total rx Data Frames'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.42397.1.1.3.2.1.8.{#WLANINDEX}'
+              key: 'totalrxdata[{#WLANINDEX}]'
+              history: 2d
+              trends: 5d
+            - uuid: 26550c9769cb4a1c9fe79fa13ae3a43a
+              name: '{#SSID}: Total rx Total Frames'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.42397.1.1.3.2.1.7.{#WLANINDEX}'
+              key: 'totalrxframe[{#WLANINDEX}]'
+              history: 2d
+              trends: 5d
+            - uuid: f7754f553f0946119e2600849159bc09
+              name: '{#SSID}: Total tx Data bytes'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.42397.1.1.3.2.1.6.{#WLANINDEX}'
+              key: 'totaltxbytes[{#WLANINDEX}]'
+              history: 2d
+              trends: 5d
+              units: B
+              tags:
+                - tag: network
+                  value: tx
+            - uuid: 447d5dbb582149eca3ff64247d1b8970
+              name: '{#SSID}: Total tx Data Frames'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.42397.1.1.3.2.1.5.{#WLANINDEX}'
+              key: 'totaltxdata[{#WLANINDEX}]'
+              history: 2d
+              trends: 5d
+            - uuid: b9e14ce7cb7b49be8fcebb7e0557ac4a
+              name: '{#SSID}: Total tx Total Frames'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.42397.1.1.3.2.1.4.{#WLANINDEX}'
+              key: 'totaltxframe[{#WLANINDEX}]'
+              history: 2d
+              trends: 5d
