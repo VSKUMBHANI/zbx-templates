@@ -33,3 +33,4 @@ Templates are with some custom items and triggers.
 16. Windows by Zabbix agent.yaml
 17. Linux by SNMP.yaml
 18. Grandstream by SNMP.yaml
+19. Uniview(UNV) by SNMP.yaml
