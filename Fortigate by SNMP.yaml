@@ -14,6 +14,10 @@ zabbix_export:
         - EtherLike-MIB
         - FORTINET-CORE-MIB
         - FORTINET-FORTIGATE-MIB
+        
+        Modified by: VijayK
+        
+        GitHub: https://github.com/VSKUMBHANI/
       groups:
         - name: 'Templates/Network devices'
       items:
@@ -525,6 +529,38 @@ zabbix_export:
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.4.1.12356.101.12.2.3.1.2.1
           key: fgVpnSslStatsLoginUsers
+          history: 1d
+          trends: 5d
+          description: |
+            FORTINET-FORTIGATE-MIB::fgVpnSslStatsLoginUsers
+            
+            The current number of users logged in through SSL-VPN tunnels in the virtual domain
+          tags:
+            - tag: Application
+              value: VPN
+        - uuid: 155b4297997a417f9d59861498fa55c8
+          name: 'Active SSL VPN User (RemoteIP)'
+          type: SNMP_AGENT
+          snmp_oid: enterprises.12356.101.12.2.4.1.4.1
+          key: fgVpnSslTunnelSrcIp
+          history: 1d
+          trends: '0'
+          value_type: TEXT
+          description: |
+            FORTINET-FORTIGATE-MIB::fgVpnSslStatsLoginUsers
+            
+            The current number of users logged in through SSL-VPN tunnels in the virtual domain
+          tags:
+            - tag: Application
+              value: VPN
+        - uuid: b9850a1ad07d43c18d98cfe589f13ebf
+          name: 'Active SSL VPN User (Name)'
+          type: SNMP_AGENT
+          snmp_oid: enterprises.12356.101.12.2.4.1.3.1
+          key: fgVpnSslTunnelUser
+          history: 1d
+          trends: '0'
+          value_type: TEXT
           description: |
             FORTINET-FORTIGATE-MIB::fgVpnSslStatsLoginUsers
             
@@ -537,6 +573,8 @@ zabbix_export:
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.4.1.12356.101.12.1.1.0
           key: fgVpnTunnelUpCount
+          history: 1d
+          trends: 5d
           description: |
             FORTINET-FORTIGATE-MIB::fgVpnTunnelUpCount
             
@@ -1846,6 +1884,24 @@ zabbix_export:
               tags:
                 - tag: Application
                   value: 'Virtual Domain - {#VDOM_NAME}'
+        - uuid: d618c9bbbebe445daaf19a55c59fee61
+          name: 'SSL VPN'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},.1.3.6.1.4.1.12356.101.12.2.4.1.3]'
+          key: fgVpnSslTunnelUserName.discovery
+          lifetime: 1d
+          item_prototypes:
+            - uuid: 4333903f329348d68d523105e8d09bb8
+              name: 'SSL User'
+              type: SNMP_AGENT
+              snmp_oid: '.1.3.6.1.4.1.12356.101.12.2.4.1.3.{#SNMPINDEX}'
+              key: 'fgVpnSslTunnelUser[{#SNMPVALUE}]'
+              history: 1d
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: vpn
+                  value: ssl
         - uuid: 2be041d47e4a49f797df925e8616538e
           name: 'VPN Phase 2'
           type: SNMP_AGENT
@@ -1858,10 +1914,13 @@ zabbix_export:
               snmp_oid: '1.3.6.1.4.1.12356.101.12.2.2.1.20.{#SNMPINDEX}'
               key: 'fgVpnTunEntStatus[{#SNMPVALUE}]'
               delay: 10s
-              history: 7d
-              trends: 10d
+              history: 1d
+              trends: 5d
               valuemap:
                 name: 'VPN Phase 2'
+              tags:
+                - tag: vpn
+                  value: 'site to site'
               trigger_prototypes:
                 - uuid: 0dcfd00939f44994a288cafc8a9d6a52
                   expression: 'last(/FortiGate SNMP/fgVpnTunEntStatus[{#SNMPVALUE}],#1)=1'
@@ -2729,6 +2788,144 @@ zabbix_export:
                   item:
                     host: 'FortiGate SNMP'
                     key: 'fgWcWtpSessionWtpMemoryUsage.[{#SNMPVALUE}]'
+        - uuid: bfd33d5060474e6d940b23522d5ea479
+          name: 'Geolocation VPN SSL Users'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#INDEX},iso.3.6.1.4.1.12356.101.12.2.4.1.1,{#NAME},iso.3.6.1.4.1.12356.101.12.2.4.1.3,{#EXTERNAL},iso.3.6.1.4.1.12356.101.12.2.4.1.4]'
+          key: get.geo.vpn.ssl.users
+          delay: 10m
+          lifetime: 3d
+          item_prototypes:
+            - uuid: 8cc8ce68824241ba98c55361b3b0442b
+              name: 'Active VPN: Country (User: {#NAME})'
+              type: HTTP_AGENT
+              key: 'get.country[{#NAME}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - $.country
+              timeout: 10s
+              url: 'http://ip-api.com/json/{#EXTERNAL}'
+              request_method: POST
+              tags:
+                - tag: 'VPN User'
+                  value: '{#NAME}'
+            - uuid: 0cce722ed8fc49cc9d629f9544dbfc61
+              name: 'Active VPN: Latitude (User: {#NAME})'
+              type: HTTP_AGENT
+              key: 'get.latitude[{#NAME}]'
+              value_type: FLOAT
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - $.lat
+              timeout: 10s
+              url: 'http://ip-api.com/json/{#EXTERNAL}'
+              request_method: POST
+              tags:
+                - tag: 'VPN User'
+                  value: '{#NAME}'
+            - uuid: 5d30258db8e648a98f865eb4fca98f85
+              name: 'Active VPN: Longitude (User: {#NAME})'
+              type: HTTP_AGENT
+              key: 'get.longitude[{#NAME}]'
+              delay: 1h
+              value_type: FLOAT
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - $.lon
+              timeout: 10s
+              url: 'http://ip-api.com/json/{#EXTERNAL}'
+              request_method: POST
+              tags:
+                - tag: 'VPN User'
+                  value: '{#NAME}'
+        - uuid: 7b3b837506e241959d150d2393ce8f0b
+          name: 'Active VPN SSL Users'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#INDEX},iso.3.6.1.4.1.12356.101.12.2.4.1.1,{#NAME},iso.3.6.1.4.1.12356.101.12.2.4.1.3,{#EXTERNAL},iso.3.6.1.4.1.12356.101.12.2.4.1.4]'
+          key: get.vpn.ssl.users
+          delay: 10m
+          lifetime: 3d
+          item_prototypes:
+            - uuid: 05e98d944ac644e5958fff33c68016af
+              name: 'Active VPN: External IP for {#NAME}'
+              type: SNMP_AGENT
+              snmp_oid: 'iso.3.6.1.4.1.12356.101.12.2.4.1.4.{#INDEX}'
+              key: 'get.external.ip[{#NAME}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: 'VPN User'
+                  value: '{#NAME}'
+            - uuid: 5c6e819ae57645198d91913bc489b45f
+              name: 'Active VPN: Internal IP for {#NAME}'
+              type: SNMP_AGENT
+              snmp_oid: 'iso.3.6.1.4.1.12356.101.12.2.4.1.5.{#INDEX}'
+              key: 'get.internal.ip[{#NAME}]'
+              delay: 1h
+              trends: '0'
+              value_type: TEXT
+              tags:
+                - tag: 'VPN User'
+                  value: '{#NAME}'
+            - uuid: 44803f6c34994d95b4775d84b475ba54
+              name: 'Active VPN: Bytes in for {#NAME}'
+              type: SNMP_AGENT
+              snmp_oid: 'iso.3.6.1.4.1.12356.101.12.2.4.1.7.{#INDEX}'
+              key: 'get.vpn.bytes.in[{#NAME}]'
+              units: B
+              tags:
+                - tag: 'VPN User'
+                  value: '{#NAME}'
+            - uuid: b2a0e0c08e2d47e1970953f5a829c467
+              name: 'Active VPN: Bytes Out for {#NAME}'
+              type: SNMP_AGENT
+              snmp_oid: 'iso.3.6.1.4.1.12356.101.12.2.4.1.8.{#INDEX}'
+              key: 'get.vpn.bytes.out[{#NAME}]'
+              units: B
+              tags:
+                - tag: 'VPN User'
+                  value: '{#NAME}'
+            - uuid: 902957cb7836460b96cc852fc9262a0b
+              name: 'Active VPN: Uptime for {#NAME}'
+              type: SNMP_AGENT
+              snmp_oid: 'iso.3.6.1.4.1.12356.101.12.2.4.1.6.{#INDEX}'
+              key: 'get.vpn.uptime[{#NAME}]'
+              delay: 10m
+              units: uptime
+              tags:
+                - tag: 'VPN User'
+                  value: '{#NAME}'
+          graph_prototypes:
+            - uuid: 746ee3de05b64229aeeadd4d8d77088a
+              name: 'Uptime for {#NAME}'
+              graph_items:
+                - color: 1A7C11
+                  calc_fnc: ALL
+                  item:
+                    host: 'FortiGate SNMP'
+                    key: 'get.vpn.uptime[{#NAME}]'
+            - uuid: f82976ce72294eed9eae9190314bba30
+              name: '{#NAME} VPN Traffic'
+              graph_items:
+                - color: 1A7C11
+                  calc_fnc: ALL
+                  item:
+                    host: 'FortiGate SNMP'
+                    key: 'get.vpn.bytes.in[{#NAME}]'
+                - sortorder: '1'
+                  color: '274482'
+                  yaxisside: RIGHT
+                  calc_fnc: ALL
+                  item:
+                    host: 'FortiGate SNMP'
+                    key: 'get.vpn.bytes.out[{#NAME}]'
         - uuid: dbeeb22470fc486aa35e434d25566681
           name: 'Network interfaces discovery'
           type: SNMP_AGENT
@@ -2745,27 +2942,6 @@ zabbix_export:
                 value: '{$NET.IF.IFADMINSTATUS.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
                 formulaid: B
-              - macro: '{#IFOPERSTATUS}'
-                value: '{$NET.IF.IFOPERSTATUS.MATCHES}'
-                formulaid: I
-              - macro: '{#IFOPERSTATUS}'
-                value: '{$NET.IF.IFOPERSTATUS.NOT_MATCHES}'
-                operator: NOT_MATCHES_REGEX
-                formulaid: J
-              - macro: '{#IFNAME}'
-                value: '{$NET.IF.IFNAME.MATCHES}'
-                formulaid: G
-              - macro: '{#IFNAME}'
-                value: '{$NET.IF.IFNAME.NOT_MATCHES}'
-                operator: NOT_MATCHES_REGEX
-                formulaid: H
-              - macro: '{#IFDESCR}'
-                value: '{$NET.IF.IFDESCR.MATCHES}'
-                formulaid: E
-              - macro: '{#IFDESCR}'
-                value: '{$NET.IF.IFDESCR.NOT_MATCHES}'
-                operator: NOT_MATCHES_REGEX
-                formulaid: F
               - macro: '{#IFALIAS}'
                 value: '{$NET.IF.IFALIAS.MATCHES}'
                 formulaid: C
@@ -2773,6 +2949,27 @@ zabbix_export:
                 value: '{$NET.IF.IFALIAS.NOT_MATCHES}'
                 operator: NOT_MATCHES_REGEX
                 formulaid: D
+              - macro: '{#IFDESCR}'
+                value: '{$NET.IF.IFDESCR.MATCHES}'
+                formulaid: E
+              - macro: '{#IFDESCR}'
+                value: '{$NET.IF.IFDESCR.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: F
+              - macro: '{#IFNAME}'
+                value: '{$NET.IF.IFNAME.MATCHES}'
+                formulaid: G
+              - macro: '{#IFNAME}'
+                value: '{$NET.IF.IFNAME.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: H
+              - macro: '{#IFOPERSTATUS}'
+                value: '{$NET.IF.IFOPERSTATUS.MATCHES}'
+                formulaid: I
+              - macro: '{#IFOPERSTATUS}'
+                value: '{$NET.IF.IFOPERSTATUS.NOT_MATCHES}'
+                operator: NOT_MATCHES_REGEX
+                formulaid: J
               - macro: '{#IFTYPE}'
                 value: '{$NET.IF.IFTYPE.MATCHES}'
                 formulaid: K
@@ -3269,17 +3466,17 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'HA Cluster Member {#HA_ID} - Concurrent Connections'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'HA Cluster Member {#HA_ID} - Concurrent Connections'
                 - type: graphprototype
                   'y': '5'
                   width: '24'
@@ -3288,17 +3485,17 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'HA Cluster Member {#HA_ID} - CPU Usage'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'HA Cluster Member {#HA_ID} - CPU Usage'
                 - type: graphprototype
                   'y': '10'
                   width: '24'
@@ -3307,17 +3504,17 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'HA Cluster Member {#HA_ID} - Memory Usage'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'HA Cluster Member {#HA_ID} - Memory Usage'
                 - type: graphprototype
                   'y': '15'
                   width: '24'
@@ -3326,17 +3523,17 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'HA Cluster Member {#HA_ID} - Network Bandwidth Usage'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'HA Cluster Member {#HA_ID} - Network Bandwidth Usage'
                 - type: graphprototype
                   'y': '20'
                   width: '24'
@@ -3345,17 +3542,17 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'HA Cluster Member {#HA_ID} - Security Events Rate'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'HA Cluster Member {#HA_ID} - Security Events Rate'
         - uuid: c9f061071fc84a79847153eab6a74239
           name: 'High Availability'
           pages:
@@ -3367,17 +3564,17 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'HA Cluster Member {#HA_ID} - Concurrent Connections'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'HA Cluster Member {#HA_ID} - Concurrent Connections'
                 - type: graphprototype
                   'y': '5'
                   width: '24'
@@ -3386,17 +3583,17 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'HA Cluster Member {#HA_ID} - CPU Usage'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'HA Cluster Member {#HA_ID} - CPU Usage'
                 - type: graphprototype
                   'y': '10'
                   width: '24'
@@ -3405,17 +3602,17 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'HA Cluster Member {#HA_ID} - Memory Usage'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'HA Cluster Member {#HA_ID} - Memory Usage'
                 - type: graphprototype
                   'y': '15'
                   width: '24'
@@ -3424,17 +3621,17 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'HA Cluster Member {#HA_ID} - Network Bandwidth Usage'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'HA Cluster Member {#HA_ID} - Network Bandwidth Usage'
                 - type: graphprototype
                   'y': '20'
                   width: '24'
@@ -3443,17 +3640,17 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'HA Cluster Member {#HA_ID} - Security Events Rate'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'HA Cluster Member {#HA_ID} - Security Events Rate'
         - uuid: 8ab0e6868243402bb894b6d71118d030
           name: 'SD-WAN Performance SLA'
           pages:
@@ -3465,17 +3662,56 @@ zabbix_export:
                     - type: INTEGER
                       name: columns
                       value: '1'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'Performance SLA Metrics to {#HC_NAME} on SD-WAN member {#MEMBER_SEQ}'
                     - type: INTEGER
                       name: rows
                       value: '1'
                     - type: INTEGER
                       name: source_type
                       value: '2'
+        - uuid: 87277c0eccad43ff856033ea170d94d9
+          name: 'SSL VPN'
+          pages:
+            - name: Traffic
+              widgets:
+                - type: graphprototype
+                  name: Traffic
+                  width: '24'
+                  height: '8'
+                  fields:
+                    - type: INTEGER
+                      name: columns
+                      value: '3'
                     - type: GRAPH_PROTOTYPE
                       name: graphid
                       value:
                         host: 'FortiGate SNMP'
-                        name: 'Performance SLA Metrics to {#HC_NAME} on SD-WAN member {#MEMBER_SEQ}'
+                        name: '{#NAME} VPN Traffic'
+                    - type: INTEGER
+                      name: rows
+                      value: '2'
+            - name: Uptime
+              widgets:
+                - type: graphprototype
+                  name: Uptime
+                  width: '24'
+                  height: '7'
+                  fields:
+                    - type: INTEGER
+                      name: columns
+                      value: '3'
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'Uptime for {#NAME}'
+                    - type: INTEGER
+                      name: rows
+                      value: '2'
         - uuid: bd78810b6f914dfd839b70edc7e232de
           name: 'System Performance'
           pages:
@@ -3491,16 +3727,6 @@ zabbix_export:
                         host: 'FortiGate SNMP'
                         name: 'CPU usage'
                 - type: graph
-                  x: '12'
-                  width: '12'
-                  height: '5'
-                  fields:
-                    - type: GRAPH
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'Memory usage'
-                - type: graph
                   'y': '5'
                   width: '12'
                   height: '5'
@@ -3510,6 +3736,26 @@ zabbix_export:
                       value:
                         host: 'FortiGate SNMP'
                         name: 'Hard Disk Usage'
+                - type: graphprototype
+                  'y': '10'
+                  width: '16'
+                  height: '5'
+                  fields:
+                    - type: GRAPH_PROTOTYPE
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'Interface {#IFNAME}({#IFALIAS}): Network traffic'
+                - type: graph
+                  x: '12'
+                  width: '12'
+                  height: '5'
+                  fields:
+                    - type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'FortiGate SNMP'
+                        name: 'Memory usage'
                 - type: graph
                   x: '12'
                   'y': '5'
@@ -3521,16 +3767,6 @@ zabbix_export:
                       value:
                         host: 'FortiGate SNMP'
                         name: 'ICMP response time'
-                - type: graphprototype
-                  'y': '10'
-                  width: '16'
-                  height: '5'
-                  fields:
-                    - type: GRAPH_PROTOTYPE
-                      name: graphid
-                      value:
-                        host: 'FortiGate SNMP'
-                        name: 'Interface {#IFNAME}({#IFALIAS}): Network traffic'
       valuemaps:
         - uuid: e94ea014e91a4db5a95647d10d5a3602
           name: 'Alarm state'
