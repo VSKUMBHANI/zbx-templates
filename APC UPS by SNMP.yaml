@@ -5,8 +5,8 @@ zabbix_export:
       name: Templates/Power
   templates:
     - uuid: 3ec55c9966624ef5bc1b50502812d581
-      template: 'APC UPS BY SNMP'
-      name: 'APC UPS BY SNMP'
+      template: 'APC UPS by SNMP'
+      name: 'APC UPS by SNMP'
       description: |
         Template Power APC UPS
         
@@ -18,6 +18,10 @@ zabbix_export:
         You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/420730-discussion-thread-for-official-zabbix-template-apc-ups
         
         Template tooling version used: 0.42
+        
+      vendor:
+        name: 'https://github.com/VSKUMBHANI'
+        version: 6.4-0
       groups:
         - name: Templates/Power
       items:
@@ -213,6 +217,7 @@ zabbix_export:
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.4.1.318.1.1.1.2.1.1.0
           key: 'battery.status[upsBasicBatteryStatus]'
+          delay: 10s
           history: 7d
           description: |
             MIB: PowerNet-MIB
@@ -466,7 +471,9 @@ zabbix_export:
           type: SNMP_AGENT
           snmp_oid: 1.3.6.1.4.1.318.1.1.1.4.1.1.0
           key: 'output.status[upsBasicOutputStatus]'
-          history: 7d
+          delay: 10s
+          history: 3d
+          trends: 7d
           description: |
             MIB: PowerNet-MIB
             The current state of the UPS. If the UPS is unable to
@@ -568,7 +575,7 @@ zabbix_export:
             - uuid: 9eb49ddab39e4f74b20a3dd3e5970731
               expression: 'last(/APC UPS by SNMP/output.status[upsBasicOutputStatus])=3'
               name: 'UPS બેટરી ઉપર છે'
-              opdata: 'હાલ ની કેપેસીટી: {ITEM.LASTVALUE1}'
+              opdata: 'હાલ નું સ્ટેટસ: {ITEM.LASTVALUE1}'
               priority: AVERAGE
               tags:
                 - tag: scope
@@ -863,8 +870,8 @@ zabbix_export:
               type: SNMP_AGENT
               snmp_oid: 1.3.6.1.4.1.318.1.1.1.2.2.6.0
               key: 'battery.external_packs_bad[upsAdvBatteryNumOfBadBattPacks.{#SNMPINDEX}]'
-              delay: 15m
               history: 7d
+              trends: 30d
               description: |
                 MIB: PowerNet-MIB
                 The number of external battery packs connected to the UPS that
@@ -1487,26 +1494,6 @@ zabbix_export:
                         host: 'APC UPS by SNMP'
                         key: 'system.net.uptime[sysUpTime.0]'
                 - type: plaintext
-                  x: '8'
-                  width: '8'
-                  height: '5'
-                  fields:
-                    - type: ITEM
-                      name: itemids
-                      value:
-                        host: 'APC UPS by SNMP'
-                        key: 'input.fail[upsAdvInputLineFailCause]'
-                - type: plaintext
-                  x: '16'
-                  width: '8'
-                  height: '5'
-                  fields:
-                    - type: ITEM
-                      name: itemids
-                      value:
-                        host: 'APC UPS by SNMP'
-                        key: 'output.status[upsBasicOutputStatus]'
-                - type: plaintext
                   'y': '5'
                   width: '8'
                   height: '5'
@@ -1516,6 +1503,26 @@ zabbix_export:
                       value:
                         host: 'APC UPS by SNMP'
                         key: 'battery.status[upsBasicBatteryStatus]'
+                - type: graph
+                  'y': '10'
+                  width: '8'
+                  height: '5'
+                  fields:
+                    - type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'APC UPS by SNMP'
+                        name: 'Capacity of the UPS batteries'
+                - type: plaintext
+                  x: '8'
+                  width: '8'
+                  height: '5'
+                  fields:
+                    - type: ITEM
+                      name: itemids
+                      value:
+                        host: 'APC UPS by SNMP'
+                        key: 'input.fail[upsAdvInputLineFailCause]'
                 - type: plaintext
                   x: '8'
                   'y': '5'
@@ -1527,27 +1534,6 @@ zabbix_export:
                       value:
                         host: 'APC UPS by SNMP'
                         key: 'battery.runtime_remaining[upsAdvBatteryRunTimeRemaining]'
-                - type: plaintext
-                  x: '16'
-                  'y': '5'
-                  width: '8'
-                  height: '5'
-                  fields:
-                    - type: ITEM
-                      name: itemids
-                      value:
-                        host: 'APC UPS by SNMP'
-                        key: 'battery.last_replace_date[upsBasicBatteryLastReplaceDate]'
-                - type: graph
-                  'y': '10'
-                  width: '8'
-                  height: '5'
-                  fields:
-                    - type: GRAPH
-                      name: graphid
-                      value:
-                        host: 'APC UPS by SNMP'
-                        name: 'Capacity of the UPS batteries'
                 - type: graph
                   x: '8'
                   'y': '10'
@@ -1559,6 +1545,27 @@ zabbix_export:
                       value:
                         host: 'APC UPS by SNMP'
                         name: Voltage
+                - type: plaintext
+                  x: '16'
+                  width: '8'
+                  height: '5'
+                  fields:
+                    - type: ITEM
+                      name: itemids
+                      value:
+                        host: 'APC UPS by SNMP'
+                        key: 'output.status[upsBasicOutputStatus]'
+                - type: plaintext
+                  x: '16'
+                  'y': '5'
+                  width: '8'
+                  height: '5'
+                  fields:
+                    - type: ITEM
+                      name: itemids
+                      value:
+                        host: 'APC UPS by SNMP'
+                        key: 'battery.last_replace_date[upsBasicBatteryLastReplaceDate]'
                 - type: graph
                   x: '16'
                   'y': '10'
