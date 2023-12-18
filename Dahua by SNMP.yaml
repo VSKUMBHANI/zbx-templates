@@ -7,7 +7,7 @@ zabbix_export:
     - uuid: 7b657481a69d4839a6561c6b6e6edf3f
       template: 'Dahua by SNMP'
       name: 'Dahua by SNMP'
-      description: |
+      description: 
         Created by VijayK
         
         GitHub : https://github.com/VSKUMBHANI/
