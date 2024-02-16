@@ -11,9 +11,6 @@ zabbix_export:
         Created by VijayK.
         
         GitHub: https://github.com/VSKUMBHANI/
-      vendor:
-        name: 'https://github.com/VSKUMBHANI'
-        version: 6.4-0
       groups:
         - name: Templates
       items:
@@ -46,9 +43,9 @@ zabbix_export:
                   
                   result = "\nCamera "+name +" is "+status+" with IP "+ip;
                   //const wordToFind = "OFFLINE";
-                  const camoff = result.search("OFFLINE");
+                  const camoff = result.search("ONLINE");
                   //console.log(camoff);
-                  if(camoff != -1){
+                  if(camoff == -1){
                       arrcamoffline.push(result);
                   }
                   else{
@@ -60,7 +57,7 @@ zabbix_export:
                   return ("Camera status...!!! \n" + arrcamoffline);
           triggers:
             - uuid: 5486c97a66f54217bf91f8bde021d0a6
-              expression: 'find(/Uniview by SNMP/Camera.Offline,,,"OFFLINE")=1'
+              expression: 'find(/Uniview by SNMP/Camera.Offline,,,"OFFLINE")=1 or find(/Uniview by SNMP/Camera.Offline,,,"Network Disconnecte")=1'
               name: 'Camera offline'
               priority: WARNING
               manual_close: 'YES'
@@ -72,6 +69,12 @@ zabbix_export:
           history: 1d
           trends: '0'
           value_type: TEXT
+          description: |
+            This item return the value in short format.
+            Original is: "IPC Information:   IPC.NO:  1  IPC.Name:  MainGate  IPC.IP:  192.168.1.25  IPC.Port:  80  IPC.Status:  ONLINE  IPC.Model:  IPC2324EBR-DPZ28  IPC.Software:  QIPC-R1201.30.42.220623
+            
+            Return the value using regex is:
+            Camera MainGate is ONLINE with IP 192.168.1.25
           preprocessing:
             - type: JAVASCRIPT
               parameters:
