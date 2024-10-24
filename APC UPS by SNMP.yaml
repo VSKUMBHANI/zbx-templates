@@ -1,8 +1,8 @@
 zabbix_export:
-  version: '6.4'
+  version: '7.0'
   template_groups:
-    - uuid: 3dcd5bbe90534f9e8eb5c2d53756af63
-      name: Templates/Power
+    - uuid: a1ddbcb13f68442fb210fd5890f9f2fe
+      name: GRP_Company_Custom
   templates:
     - uuid: 3ec55c9966624ef5bc1b50502812d581
       template: 'APC UPS by SNMP'
@@ -18,12 +18,11 @@ zabbix_export:
         You can discuss this template or leave feedback on our forum https://www.zabbix.com/forum/zabbix-suggestions-and-feedback/420730-discussion-thread-for-official-zabbix-template-apc-ups
         
         Template tooling version used: 0.42
-        
       vendor:
-        name: 'https://github.com/VSKUMBHANI'
-        version: 6.4-0
+        name: 'https://github.com/vskumbhani'
+        version: 7.0-4
       groups:
-        - name: Templates/Power
+        - name: GRP_Company_Custom
       items:
         - uuid: 96898d48b27946bfa9a623d7d0b028be
           name: 'Battery capacity'
@@ -49,15 +48,6 @@ zabbix_export:
             - tag: component
               value: power
           triggers:
-            - uuid: aa0bbfb321d440438fb421825f23e140
-              expression: 'last(/APC UPS by SNMP/battery.capacity[upsHighPrecBatteryCapacity]) < {$BATTERY.CAPACITY.MIN.WARN}'
-              name: 'Battery has low capacity'
-              event_name: 'Battery has low capacity (below {$BATTERY.CAPACITY.MIN.WARN}%)'
-              opdata: 'Current capacity: {ITEM.LASTVALUE1}'
-              priority: HIGH
-              tags:
-                - tag: scope
-                  value: capacity
             - uuid: f713b551dcc04be49ff5b2422607ebe5
               expression: 'last(/APC UPS by SNMP/battery.capacity[upsHighPrecBatteryCapacity]) < {$BATTERY.CAPACITY.MIN.WARN20}'
               name: 'Battery has low capacity 20'
@@ -84,6 +74,15 @@ zabbix_export:
               priority: AVERAGE
               tags:
                 - tag: scop
+                  value: capacity
+            - uuid: aa0bbfb321d440438fb421825f23e140
+              expression: 'last(/APC UPS by SNMP/battery.capacity[upsHighPrecBatteryCapacity]) < {$BATTERY.CAPACITY.MIN.WARN}'
+              name: 'Battery has low capacity 50'
+              event_name: 'Battery has low capacity (below {$BATTERY.CAPACITY.MIN.WARN}%)'
+              opdata: 'Current capacity: {ITEM.LASTVALUE1}'
+              priority: AVERAGE
+              tags:
+                - tag: scope
                   value: capacity
             - uuid: 7ab2c4fc76dc4b93ac889ef90e10555e
               expression: 'last(/APC UPS by SNMP/battery.capacity[upsHighPrecBatteryCapacity]) < {$BATTERY.CAPACITY.MIN.WARN20}'
@@ -117,7 +116,7 @@ zabbix_export:
               name: 'બેટરી કેપેસિટી ૫૦% થી ઓછી છે.'
               event_name: 'બેટરી કેપેસિટી ૫૦% થી ઓછી છે.'
               opdata: 'હાલ ની કેપેસીટી: {ITEM.LASTVALUE1}'
-              priority: HIGH
+              priority: AVERAGE
               tags:
                 - tag: scope
                   value: capacity
@@ -147,8 +146,8 @@ zabbix_export:
           key: 'battery.last_replace_date[upsBasicBatteryLastReplaceDate]'
           delay: 1h
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: |
             MIB: PowerNet-MIB
             The date when the UPS system's batteries were last replaced
@@ -212,6 +211,16 @@ zabbix_export:
           tags:
             - tag: component
               value: power
+          triggers:
+            - uuid: 5979ca5e7a944375b9767210f5b40e79
+              expression: 'last(/APC UPS by SNMP/battery.runtime_remaining[upsAdvBatteryRunTimeRemaining])<{$BATTERY.RUNTIME.MIN.WARN}'
+              name: 'Battery runtime remaining'
+              event_name: 'Battery runtime remain below 30 minutes.'
+              priority: HIGH
+              manual_close: 'YES'
+              tags:
+                - tag: scope
+                  value: capacity
         - uuid: f4106603e47e40548592d60a7b8b3148
           name: 'Battery status'
           type: SNMP_AGENT
@@ -605,9 +614,10 @@ zabbix_export:
           name: 'SNMP traps (fallback)'
           type: SNMP_TRAP
           key: snmptrap.fallback
+          delay: '0'
           history: 2w
-          trends: '0'
           value_type: LOG
+          trends: '0'
           description: 'The item is used to collect all SNMP traps unmatched by other snmptrap items'
           logtimefmt: 'hh:mm:sszyyyy/MM/dd'
           tags:
@@ -620,8 +630,8 @@ zabbix_export:
           key: 'system.contact[sysContact.0]'
           delay: 15m
           history: 2w
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: |
             MIB: SNMPv2-MIB
             The textual identification of the contact person for this managed
@@ -642,8 +652,8 @@ zabbix_export:
           key: 'system.descr[sysDescr.0]'
           delay: 15m
           history: 2w
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: |
             MIB: SNMPv2-MIB
             A textual description of the entity. This value should
@@ -674,7 +684,7 @@ zabbix_export:
           preprocessing:
             - type: CHECK_NOT_SUPPORTED
               parameters:
-                - ''
+                - '-1'
               error_handler: CUSTOM_VALUE
               error_handler_params: '0'
             - type: MULTIPLIER
@@ -690,8 +700,8 @@ zabbix_export:
           key: 'system.location[sysLocation.0]'
           delay: 15m
           history: 2w
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: |
             MIB: SNMPv2-MIB
             The physical location of this node (e.g., `telephone closet,
@@ -711,8 +721,8 @@ zabbix_export:
           key: 'system.model[upsBasicIdentModel]'
           delay: 15m
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: |
             MIB: PowerNet-MIB
             The UPS model name (e.g. 'APC Smart-UPS 600').
@@ -730,8 +740,8 @@ zabbix_export:
           key: 'system.name[sysName.0]'
           delay: 15m
           history: 2w
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: |
             MIB: SNMPv2-MIB
             An administratively-assigned name for this managed node.By
@@ -785,8 +795,8 @@ zabbix_export:
           key: 'system.objectid[sysObjectID.0]'
           delay: 15m
           history: 2w
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: |
             MIB: SNMPv2-MIB
             The vendor's authoritative identification of the network management
@@ -809,8 +819,8 @@ zabbix_export:
           key: 'system.sn[upsAdvIdentSerialNumber]'
           delay: 15m
           history: 7d
-          trends: '0'
           value_type: CHAR
+          trends: '0'
           description: |
             MIB: PowerNet-MIB
             An 8-character string identifying the serial number of
@@ -824,6 +834,18 @@ zabbix_export:
           tags:
             - tag: component
               value: inventory
+        - uuid: c03ea2c1382e4c1bb95765b91e126e3f
+          name: 'UPS Internal Temperature'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.318.1.1.1.4.1.4.0
+          key: upsInternalTemp
+          history: 30d
+          trends: 30d
+          units: ℃
+          description: 'The actual internal temperature of the UPS system in Celsius.'
+          tags:
+            - tag: component
+              value: temperature
         - uuid: ca3275f69f3c4e7c9c71108451c0b64f
           name: 'SNMP agent availability'
           type: INTERNAL
@@ -863,6 +885,8 @@ zabbix_export:
           snmp_oid: 'discovery[{#EXTERNAL_PACKS},1.3.6.1.4.1.318.1.1.1.2.2.6]'
           key: battery.packs.bad.discovery
           delay: 1h
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
           description: 'Discovery of the number of external defective battery packs.'
           item_prototypes:
             - uuid: c4dccc96218448d696952f6ea5d1f24b
@@ -897,6 +921,8 @@ zabbix_export:
                 value: ^$
                 operator: NOT_MATCHES_REGEX
                 formulaid: A
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
           item_prototypes:
             - uuid: a168ef9da6504b31a8234b272f1a1a80
               name: '{#BATTERY_PACK}.{#CARTRIDGE_INDEX}: Battery estimated replace date'
@@ -905,8 +931,8 @@ zabbix_export:
               key: 'battery.estimated_replace_date[upsHighPrecBatteryPackCartridgeReplaceDate.{#BATTERY_PACK}.{#CARTRIDGE_INDEX}]'
               delay: 1h
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: |
                 MIB: PowerNet-MIB
                 The battery cartridge estimated battery replace date.
@@ -925,8 +951,8 @@ zabbix_export:
               snmp_oid: '1.3.6.1.4.1.318.1.1.1.2.3.10.2.1.7.{#SNMPINDEX}'
               key: 'battery.pack.cartridge_health[upsHighPrecBatteryPackCartridgeHealth.{#BATTERY_PACK}.{#CARTRIDGE_INDEX}]'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: |
                 MIB: PowerNet-MIB
                 The battery cartridge health.
@@ -970,8 +996,8 @@ zabbix_export:
               snmp_oid: '1.3.6.1.4.1.318.1.1.1.2.3.10.2.1.10.{#SNMPINDEX}'
               key: 'battery.pack.status[upsHighPrecBatteryPackCartridgeStatus.{#BATTERY_PACK}.{#CARTRIDGE_INDEX}]'
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: |
                 MIB: PowerNet-MIB
                 The battery cartridge status.
@@ -1057,8 +1083,8 @@ zabbix_export:
               key: 'system.sn[upsHighPrecBatteryPackSerialNumber.{#BATTERY_PACK}.{#CARTRIDGE_INDEX}]'
               delay: 15m
               history: 7d
-              trends: '0'
               value_type: CHAR
+              trends: '0'
               description: |
                 MIB: PowerNet-MIB
                 The battery pack serial number.
@@ -1075,6 +1101,8 @@ zabbix_export:
           snmp_oid: 'discovery[{#EXTERNAL_SENSOR1_NAME},1.3.6.1.4.1.318.1.1.25.1.2.1.3]'
           key: external.sensor1.discovery
           delay: 1h
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
           description: uioSensorStatusTable
           item_prototypes:
             - uuid: ee017a632ee944fe9122e21fa7e7531f
@@ -1188,6 +1216,8 @@ zabbix_export:
           snmp_oid: 'discovery[{#EXTERNAL_SENSOR2_NAME},1.3.6.1.4.1.318.1.1.25.1.2.2.3]'
           key: external.sensor2.discovery
           delay: 1h
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
           description: uioSensorStatusTable
           item_prototypes:
             - uuid: 3417b035a4f14ce3992e10029674de8e
@@ -1301,6 +1331,8 @@ zabbix_export:
           snmp_oid: 'discovery[{#PHASEINDEX},1.3.6.1.4.1.318.1.1.1.9.2.3.1.2.1.1]'
           key: input.phases.discovery
           delay: 1h
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
           description: 'The input phase identifier. OID upsPhaseInputPhaseIndex.1.1'
           item_prototypes:
             - uuid: a1b8277cd1b248348263c233ab05fd4f
@@ -1360,6 +1392,8 @@ zabbix_export:
           snmp_oid: 'discovery[{#PHASEINDEX},1.3.6.1.4.1.318.1.1.1.9.3.3.1.2.1.1]'
           key: output.phases.discovery
           delay: 1h
+          lifetime: 30d
+          enabled_lifetime_type: DISABLE_NEVER
           description: 'The output phase identifier. OID upsPhaseOutputPhaseIndex.1.1'
           item_prototypes:
             - uuid: cfdded918e444958b5c592efae76b96e
@@ -1455,8 +1489,11 @@ zabbix_export:
         - macro: '{$BATTERY.CAPACITY.MIN.WARN40}'
           value: '40'
           description: 'Minimum battery capacity percentage for trigger expression.'
+        - macro: '{$BATTERY.RUNTIME.MIN.WARN}'
+          value: '500'
+          description: 'Minimum runtime remain on battery.'
         - macro: '{$BATTERY.TEMP.MAX.WARN}'
-          value: '55'
+          value: '45'
           description: 'Maximum battery temperature for trigger expression.'
         - macro: '{$SNMP.TIMEOUT}'
           value: 5m
@@ -1484,28 +1521,58 @@ zabbix_export:
           name: 'UPS Summary'
           pages:
             - widgets:
-                - type: plaintext
-                  width: '8'
+                - type: itemhistory
+                  width: '24'
                   height: '5'
                   fields:
                     - type: ITEM
-                      name: itemids
+                      name: columns.0.itemid
                       value:
                         host: 'APC UPS by SNMP'
                         key: 'system.net.uptime[sysUpTime.0]'
-                - type: plaintext
+                    - type: STRING
+                      name: columns.0.name
+                      value: 'Uptime (network)'
+                    - type: STRING
+                      name: reference
+                      value: AAAWI
+                    - type: INTEGER
+                      name: show_timestamp
+                      value: '1'
+                    - type: STRING
+                      name: time_period.from
+                      value: now-1y
+                    - type: STRING
+                      name: time_period.to
+                      value: now
+                - type: itemhistory
                   'y': '5'
-                  width: '8'
+                  width: '24'
                   height: '5'
                   fields:
                     - type: ITEM
-                      name: itemids
+                      name: columns.0.itemid
                       value:
                         host: 'APC UPS by SNMP'
                         key: 'battery.status[upsBasicBatteryStatus]'
+                    - type: STRING
+                      name: columns.0.name
+                      value: 'Battery status'
+                    - type: STRING
+                      name: reference
+                      value: AAAWJ
+                    - type: INTEGER
+                      name: show_timestamp
+                      value: '1'
+                    - type: STRING
+                      name: time_period.from
+                      value: now-1y
+                    - type: STRING
+                      name: time_period.to
+                      value: now
                 - type: graph
                   'y': '10'
-                  width: '8'
+                  width: '24'
                   height: '5'
                   fields:
                     - type: GRAPH
@@ -1513,31 +1580,64 @@ zabbix_export:
                       value:
                         host: 'APC UPS by SNMP'
                         name: 'Capacity of the UPS batteries'
-                - type: plaintext
-                  x: '8'
-                  width: '8'
+                    - type: STRING
+                      name: reference
+                      value: AAAQO
+                - type: itemhistory
+                  x: '24'
+                  width: '24'
                   height: '5'
                   fields:
                     - type: ITEM
-                      name: itemids
+                      name: columns.0.itemid
                       value:
                         host: 'APC UPS by SNMP'
                         key: 'input.fail[upsAdvInputLineFailCause]'
-                - type: plaintext
-                  x: '8'
+                    - type: STRING
+                      name: columns.0.name
+                      value: 'Input fail cause'
+                    - type: STRING
+                      name: reference
+                      value: AAAWK
+                    - type: INTEGER
+                      name: show_timestamp
+                      value: '1'
+                    - type: STRING
+                      name: time_period.from
+                      value: now-1y
+                    - type: STRING
+                      name: time_period.to
+                      value: now
+                - type: itemhistory
+                  x: '24'
                   'y': '5'
-                  width: '8'
+                  width: '24'
                   height: '5'
                   fields:
                     - type: ITEM
-                      name: itemids
+                      name: columns.0.itemid
                       value:
                         host: 'APC UPS by SNMP'
                         key: 'battery.runtime_remaining[upsAdvBatteryRunTimeRemaining]'
+                    - type: STRING
+                      name: columns.0.name
+                      value: 'Battery runtime remaining'
+                    - type: STRING
+                      name: reference
+                      value: AAAWL
+                    - type: INTEGER
+                      name: show_timestamp
+                      value: '1'
+                    - type: STRING
+                      name: time_period.from
+                      value: now-1y
+                    - type: STRING
+                      name: time_period.to
+                      value: now
                 - type: graph
-                  x: '8'
+                  x: '24'
                   'y': '10'
-                  width: '8'
+                  width: '24'
                   height: '5'
                   fields:
                     - type: GRAPH
@@ -1545,31 +1645,67 @@ zabbix_export:
                       value:
                         host: 'APC UPS by SNMP'
                         name: Voltage
-                - type: plaintext
-                  x: '16'
-                  width: '8'
+                    - type: STRING
+                      name: reference
+                      value: AAAQP
+                - type: itemhistory
+                  x: '48'
+                  width: '24'
                   height: '5'
                   fields:
                     - type: ITEM
-                      name: itemids
+                      name: columns.0.itemid
                       value:
                         host: 'APC UPS by SNMP'
                         key: 'output.status[upsBasicOutputStatus]'
-                - type: plaintext
-                  x: '16'
+                    - type: STRING
+                      name: columns.0.name
+                      value: 'Output status'
+                    - type: STRING
+                      name: reference
+                      value: AAAWM
+                    - type: INTEGER
+                      name: show_timestamp
+                      value: '1'
+                    - type: STRING
+                      name: time_period.from
+                      value: now-1y
+                    - type: STRING
+                      name: time_period.to
+                      value: now
+                - type: itemhistory
+                  x: '48'
                   'y': '5'
-                  width: '8'
+                  width: '24'
                   height: '5'
                   fields:
                     - type: ITEM
-                      name: itemids
+                      name: columns.0.itemid
                       value:
                         host: 'APC UPS by SNMP'
                         key: 'battery.last_replace_date[upsBasicBatteryLastReplaceDate]'
+                    - type: INTEGER
+                      name: columns.0.monospace_font
+                      value: '1'
+                    - type: STRING
+                      name: columns.0.name
+                      value: 'Battery last replace date'
+                    - type: STRING
+                      name: reference
+                      value: AAAWN
+                    - type: INTEGER
+                      name: show_timestamp
+                      value: '1'
+                    - type: STRING
+                      name: time_period.from
+                      value: now-1y
+                    - type: STRING
+                      name: time_period.to
+                      value: now
                 - type: graph
-                  x: '16'
+                  x: '48'
                   'y': '10'
-                  width: '8'
+                  width: '24'
                   height: '5'
                   fields:
                     - type: GRAPH
@@ -1577,6 +1713,9 @@ zabbix_export:
                       value:
                         host: 'APC UPS by SNMP'
                         name: Output
+                    - type: STRING
+                      name: reference
+                      value: AAAQQ
       valuemaps:
         - uuid: a808aadebf964e0cb6b8724bf1165013
           name: 'PowerNet-MIB::uioSensorStatusAlarmStatus'
